@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Directory</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="intro">
+        <p class="church-name">Bible Baptist Church of Pasay</p>
+        <p class="eyebrow">Community Service 2026</p>
+      </section>
+
+      <section class="card form-card" aria-labelledby="form-title">
+        <div class="section-heading">
+          <h2 id="form-title">Patient Information Form</h2>
+          <p>All fields are required.</p>
+        </div>
+        <form id="customer-form">
+          <div class="field-grid">
+            <label>
+              Name
+              <input id="name" name="name" type="text" placeholder="e.g. Jordan Lee" autocomplete="name" required maxlength="80" />
+            </label>
+            <label>
+              Age
+              <input id="age" name="age" type="number" placeholder="e.g. 32" min="0" max="130" required />
+            </label>
+          </div>
+          <div class="field-grid">
+            <label>
+              Birthday
+              <input id="birthday" name="birthday" type="date" required />
+            </label>
+            <label>
+              Gender
+              <select id="gender" name="gender" required>
+                <option value="" selected disabled>Select gender</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+              </select>
+            </label>
+          </div>
+          <div class="field-grid contact-grid">
+            <label>
+              Contact number
+              <input id="contact-number" name="contactNumber" type="tel" placeholder="e.g. 0917 123 4567" autocomplete="tel" required maxlength="30" />
+            </label>
+            <label>
+              Emergency Contact Name and Number
+              <input id="emergency-contact-name" name="emergencyContactName" type="text" placeholder="e.g. Morgan Lee — 0918 123 4567" required maxlength="120" />
+            </label>
+          </div>
+          <fieldset class="services-fieldset">
+            <legend>Services to avail</legend>
+            <p id="service-hint" class="field-hint">Select up to 3 services.</p>
+            <div class="service-options">
+              <label class="service-option"><input type="checkbox" name="services" value="Medical" /> <span>Medical</span></label>
+              <label class="service-option"><input type="checkbox" name="services" value="Dental" /> <span>Dental</span></label>
+              <label class="service-option"><input type="checkbox" name="services" value="Eye Checkup (Cataract Screening)" /> <span>Eye Checkup (Cataract Screening)</span></label>
+              <label class="service-option"><input type="checkbox" name="services" value="Reading Glass" /> <span>Reading Glass</span></label>
+              <label class="service-option"><input type="checkbox" name="services" value="Haircut" /> <span>Haircut</span></label>
+            </div>
+          </fieldset>
+          <div class="form-footer">
+            <p id="form-message" class="form-message" aria-live="polite"></p>
+            <button type="submit">Add customer <span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card directory-card" aria-labelledby="directory-title">
+        <div class="directory-header">
+          <div>
+            <p class="eyebrow">Saved records</p>
+            <h2 id="directory-title">Customers</h2>
+          </div>
+          <div class="directory-actions">
+            <span id="customer-count" class="count">0 customers</span>
+            <button id="print-selected" class="print-button" type="button" disabled>Print selected (0)</button>
+            <button id="print-records" class="print-button" type="button">Print all</button>
+          </div>
+        </div>
+        <label class="filter-field">
+          <span>Filter records</span>
+          <input id="customer-filter" type="search" placeholder="Customer number or name" autocomplete="off" />
+        </label>
+        <div id="empty-state" class="empty-state">
+          <span class="empty-icon" aria-hidden="true">◎</span>
+          <p>No customers yet. Add your first record above.</p>
+        </div>
+        <div id="customer-list" class="customer-list" aria-live="polite"></div>
+      </section>
+    </main>
+    <dialog id="print-dialog" class="print-dialog" aria-labelledby="print-dialog-title">
+      <form id="print-details-form" method="dialog">
+        <div class="dialog-heading">
+          <p class="eyebrow">Print selected records</p>
+          <h2 id="print-dialog-title">Add vital signs</h2>
+          <p>These values are included in this printout only and are not saved to customer records.</p>
+        </div>
+        <div id="print-customer-fields" class="print-customer-fields"></div>
+        <div class="dialog-actions">
+          <button id="cancel-print" class="cancel-button" type="button">Cancel</button>
+          <button type="submit">Print selected</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="app.js"></script>
+  </body>
+</html>
