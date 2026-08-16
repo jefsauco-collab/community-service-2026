@@ -132,7 +132,7 @@ button:hover { background: #c96308; transform: translateY(-1px); }
   .print-vital-line { border-bottom: 1px solid #5f7487; display: inline-block; height: 1.1em; margin-left: 7px; min-width: 110px; vertical-align: bottom; }
   .print-vital-value { color: #142840; font-size: .68rem; font-weight: 500; }
   .print-complaint { display: grid; grid-column: 1 / -1; gap: 2px; color: #244e76; font-size: .68rem; font-weight: 700; }
-  .print-complaint-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 1.1em; white-space: pre-wrap; }
+  .print-complaint-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 3.2em; white-space: pre-wrap; }
   .print-remarks { display: grid; grid-column: 1 / -1; gap: 2px; color: #244e76; font-size: .68rem; font-weight: 700; }
-  .print-remarks-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 1.1em; white-space: pre-wrap; }
+  .print-remarks-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 3.2em; white-space: pre-wrap; }
 }

@@ -14,6 +14,12 @@ const cancelPrintButton = document.querySelector('#cancel-print');
 const storageKey = 'customer-directory-records';
 const googleSheetsEndpoint = 'https://script.google.com/macros/s/AKfycbydFvEPV0H9nxHktJt8r01xYfzwzACRgmVzNB_wXJK_GXtptDJ9BMxbu7F-DC5a0lwonA/exec';
 const entryOnlyMode = new URLSearchParams(window.location.search).get('mode') === 'entry';
+const serviceNameUpdates = {
+  Medical: 'Medical Check-up',
+  Dental: 'Dental Check-up',
+  'Eye Checkup (Cataract Screening)': 'Eye Check-up (Cataract Screening)',
+  'Reading Glass': 'Reading Glasses',
+};
 
 let customers = JSON.parse(localStorage.getItem(storageKey) || '[]');
 const selectedCustomerIds = new Set();
@@ -235,6 +241,19 @@ function removeLegacyHiddenData() {
   saveCustomers();
 }
 
+function updateSavedServiceNames() {
+  let changed = false;
+  customers.forEach((customer) => {
+    if (!customer.services) return;
+    customer.services = customer.services.map((service) => {
+      const updatedName = serviceNameUpdates[service] || service;
+      changed ||= updatedName !== service;
+      return updatedName;
+    });
+  });
+  if (changed) saveCustomers();
+}
+
 function renderCustomers() {
   const filterText = customerFilter.value.trim().toLowerCase();
   const visibleCustomers = customers.filter((customer) => (
@@ -416,6 +435,7 @@ form.querySelectorAll('input[name="services"]').forEach((input) => {
 });
 
 removeLegacyHiddenData();
+updateSavedServiceNames();
 assignMissingCustomerNumbers();
 renderCustomers();
 updatePrintSelectedButton();
