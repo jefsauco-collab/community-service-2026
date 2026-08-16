@@ -113,8 +113,7 @@ button:hover { background: #c96308; transform: translateY(-1px); }
   @page { size: A6 portrait; margin: 5mm; }
   body { background: #fff; }
   .app-shell { width: 100%; margin: 0; padding: 0; }
-  .intro, .form-card, .print-button, .delete-button, .empty-state, .filter-field, .customer-select { display: none !important; }
-  .directory-header .eyebrow { display: none !important; }
+  .intro, .form-card, .directory-header, .print-button, .delete-button, .empty-state, .filter-field, .customer-select { display: none !important; }
   .directory-card { border: 0; border-radius: 0; box-shadow: none; margin: 0; padding: 0; }
   .customer-row { grid-template-columns: 1fr 1fr; gap: 4px 8px; break-after: page; break-inside: avoid; page-break-after: always; padding: 0 0 5px; }
   body.print-selected .customer-row:not(.is-selected) { display: none !important; }
