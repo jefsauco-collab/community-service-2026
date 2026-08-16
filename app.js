@@ -12,6 +12,7 @@ const printDetailsForm = document.querySelector('#print-details-form');
 const printCustomerFields = document.querySelector('#print-customer-fields');
 const cancelPrintButton = document.querySelector('#cancel-print');
 const storageKey = 'customer-directory-records';
+const googleSheetsEndpoint = 'https://script.google.com/macros/s/AKfycbypwzs8k98VgIqKuArIG-Dnt_UA5dvockjJjiH8o_vIuWReqc8zpRzzKv5QjgdoFPS5/exec';
 const entryOnlyMode = new URLSearchParams(window.location.search).get('mode') === 'entry';
 
 let customers = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -213,6 +214,15 @@ function saveCustomers() {
   localStorage.setItem(storageKey, JSON.stringify(customers));
 }
 
+async function saveToGoogleSheets(customer) {
+  await fetch(googleSheetsEndpoint, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(customer),
+  });
+}
+
 function removeLegacyHiddenData() {
   const hasRemovedData = customers.some((customer) => (
     Object.hasOwn(customer, 'address')
@@ -321,7 +331,7 @@ function renderCustomers() {
   });
 }
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const values = new FormData(form);
   const selectedServices = values.getAll('services');
@@ -345,12 +355,21 @@ form.addEventListener('submit', (event) => {
     services: selectedServices,
   };
 
+  let sentToGoogleSheets = true;
+  try {
+    await saveToGoogleSheets(customer);
+  } catch (error) {
+    sentToGoogleSheets = false;
+  }
+
   customers.unshift(customer);
   saveCustomers();
   renderCustomers();
   form.reset();
   updateServiceSelectionLimit();
-  message.textContent = `${customer.name} was added.`;
+  message.textContent = sentToGoogleSheets
+    ? `${customer.name} was added and sent to Google Sheets.`
+    : `${customer.name} was saved on this device, but could not be sent to Google Sheets.`;
   document.querySelector('#name').focus();
 });
 
