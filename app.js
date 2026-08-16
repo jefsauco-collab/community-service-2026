@@ -158,6 +158,7 @@ function openPrintDetailsDialog() {
       createPrintSummaryItem('Age', `${customer.age} years`),
       createPrintSummaryItem('Birthday', formatBirthday(customer.birthday)),
       createPrintSummaryItem('Gender', customer.gender || 'Not provided'),
+      createPrintSummaryItem('Address', customer.address || 'Not provided'),
       createPrintSummaryItem('Contact number', customer.contactNumber || 'Not provided'),
       createPrintSummaryItem('Emergency Contact Name and Number', customer.emergencyContactName || 'Not provided'),
       createServiceCheckboxGroup('print-summary-services', customer.services || []),
@@ -231,13 +232,12 @@ async function saveToGoogleSheets(customer) {
 
 function removeLegacyHiddenData() {
   const hasRemovedData = customers.some((customer) => (
-    Object.hasOwn(customer, 'address')
-    || Object.hasOwn(customer, 'bloodPressure')
+    Object.hasOwn(customer, 'bloodPressure')
     || Object.hasOwn(customer, 'temperature')
     || Object.hasOwn(customer, 'emergencyContactNumber')
   ));
   if (!hasRemovedData) return;
-  customers = customers.map(({ address, bloodPressure, temperature, emergencyContactNumber, ...customer }) => customer);
+  customers = customers.map(({ bloodPressure, temperature, emergencyContactNumber, ...customer }) => customer);
   saveCustomers();
 }
 
@@ -303,6 +303,7 @@ function renderCustomers() {
     details.append(
       createDetail('Age', `${customer.age} years`),
       createDetail('Birthday', formatBirthday(customer.birthday)),
+      createDetail('Address', customer.address || 'Not provided'),
       createDetail('Contact', customer.contactNumber || 'Not provided'),
       createDetail('Emergency Contact Name and Number', customer.emergencyContactName || 'Not provided'),
     );
@@ -369,6 +370,7 @@ form.addEventListener('submit', async (event) => {
     age: Number(values.get('age')),
     birthday: values.get('birthday'),
     gender: values.get('gender'),
+    address: values.get('address').trim(),
     contactNumber: values.get('contactNumber').trim(),
     emergencyContactName: values.get('emergencyContactName').trim(),
     services: selectedServices,
