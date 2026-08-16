@@ -110,22 +110,29 @@ button:hover { background: #c96308; transform: translateY(-1px); }
 }
 
 @media print {
-  @page { size: A6 portrait; margin: 8mm; }
+  @page { size: A6 portrait; margin: 5mm; }
   body { background: #fff; }
   .app-shell { width: 100%; margin: 0; padding: 0; }
   .intro, .form-card, .print-button, .delete-button, .empty-state, .filter-field, .customer-select { display: none !important; }
+  .directory-header .eyebrow { display: none !important; }
   .directory-card { border: 0; border-radius: 0; box-shadow: none; margin: 0; padding: 0; }
-  .customer-row { grid-template-columns: .8fr 1.1fr 1.7fr 1.4fr; break-inside: avoid; }
+  .customer-row { grid-template-columns: 1fr 1fr; gap: 4px 8px; break-after: page; break-inside: avoid; page-break-after: always; padding: 0 0 5px; }
   body.print-selected .customer-row:not(.is-selected) { display: none !important; }
-  .customer-row:last-child { padding-bottom: 18px; }
-  .print-vitals { display: grid; grid-column: 1 / -1; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px dashed #a9bfd3; margin-top: 6px; padding-top: 11px; }
-  .print-services { display: grid; grid-column: 1 / -1; gap: 6px; margin-top: 6px; }
-  .print-services > strong { color: #244e76; font-size: .8rem; width: 100%; }
-  .print-vital { color: #244e76; font-size: .8rem; font-weight: 700; }
+  .customer-row:last-child { break-after: auto; page-break-after: auto; padding-bottom: 0; }
+  .customer-number { font-size: .68rem; }
+  .customer-name { font-size: .76rem; }
+  .customer-gender { font-size: .66rem; }
+  .customer-details { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; gap: 2px 7px; font-size: .64rem; }
+  .service-tags { display: none !important; }
+  .print-vitals { display: grid; grid-column: 1 / -1; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px dashed #a9bfd3; margin-top: 3px; padding-top: 5px; }
+  .print-services { display: grid; grid-column: 1 / -1; gap: 3px; margin-top: 2px; }
+  .print-services > strong { color: #244e76; font-size: .68rem; width: 100%; }
+  .print-service-option { font-size: .66rem; }
+  .print-vital { color: #244e76; font-size: .68rem; font-weight: 700; }
   .print-vital-line { border-bottom: 1px solid #5f7487; display: inline-block; height: 1.1em; margin-left: 7px; min-width: 110px; vertical-align: bottom; }
-  .print-vital-value { color: #142840; font-weight: 500; }
-  .print-complaint { display: grid; grid-column: 1 / -1; gap: 5px; color: #244e76; font-size: .8rem; font-weight: 700; }
-  .print-complaint-value { color: #142840; font-weight: 500; min-height: 2.2em; white-space: pre-wrap; }
-  .print-remarks { display: grid; grid-column: 1 / -1; gap: 5px; color: #244e76; font-size: .8rem; font-weight: 700; }
-  .print-remarks-value { color: #142840; font-weight: 500; min-height: 2.2em; white-space: pre-wrap; }
+  .print-vital-value { color: #142840; font-size: .68rem; font-weight: 500; }
+  .print-complaint { display: grid; grid-column: 1 / -1; gap: 2px; color: #244e76; font-size: .68rem; font-weight: 700; }
+  .print-complaint-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 1.1em; white-space: pre-wrap; }
+  .print-remarks { display: grid; grid-column: 1 / -1; gap: 2px; color: #244e76; font-size: .68rem; font-weight: 700; }
+  .print-remarks-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 1.1em; white-space: pre-wrap; }
 }
