@@ -12,7 +12,7 @@ const printDetailsForm = document.querySelector('#print-details-form');
 const printCustomerFields = document.querySelector('#print-customer-fields');
 const cancelPrintButton = document.querySelector('#cancel-print');
 const storageKey = 'customer-directory-records';
-const googleSheetsEndpoint = 'https://script.google.com/macros/s/AKfycbypwzs8k98VgIqKuArIG-Dnt_UA5dvockjJjiH8o_vIuWReqc8zpRzzKv5QjgdoFPS5/exec';
+const googleSheetsEndpoint = 'https://script.google.com/macros/s/AKfycbydFvEPV0H9nxHktJt8r01xYfzwzACRgmVzNB_wXJK_GXtptDJ9BMxbu7F-DC5a0lwonA/exec';
 const entryOnlyMode = new URLSearchParams(window.location.search).get('mode') === 'entry';
 
 let customers = JSON.parse(localStorage.getItem(storageKey) || '[]');
