@@ -83,10 +83,12 @@
           </div>
           <div class="directory-actions">
             <span id="customer-count" class="count">0 customers</span>
+            <button id="refresh-records" class="print-button" type="button">Refresh records</button>
             <button id="print-selected" class="print-button" type="button" disabled>Print selected (0)</button>
             <button id="print-records" class="print-button" type="button">Print all</button>
           </div>
         </div>
+        <p id="records-message" class="form-message" aria-live="polite"></p>
         <label class="filter-field">
           <span>Filter records</span>
           <input id="customer-filter" type="search" placeholder="Customer number or name" autocomplete="off" />

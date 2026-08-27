@@ -5,8 +5,10 @@ const count = document.querySelector('#customer-count');
 const message = document.querySelector('#form-message');
 const printButton = document.querySelector('#print-records');
 const printSelectedButton = document.querySelector('#print-selected');
+const refreshRecordsButton = document.querySelector('#refresh-records');
 const customerFilter = document.querySelector('#customer-filter');
 const serviceHint = document.querySelector('#service-hint');
+const recordsMessage = document.querySelector('#records-message');
 const printDialog = document.querySelector('#print-dialog');
 const printDetailsForm = document.querySelector('#print-details-form');
 const printCustomerFields = document.querySelector('#print-customer-fields');
@@ -233,12 +235,79 @@ function saveCustomers() {
 }
 
 async function saveToGoogleSheets(customer) {
-  await fetch(googleSheetsEndpoint, {
+  const response = await fetch(googleSheetsEndpoint, {
     method: 'POST',
-    mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(customer),
   });
+  if (!response.ok) throw new Error('Google Sheets could not save the record.');
+  const result = await response.json();
+  if (!result.ok || !result.record) throw new Error(result.message || 'Google Sheets could not save the record.');
+  return normaliseCustomer(result.record);
+}
+
+async function deleteFromGoogleSheets(customer) {
+  const response = await fetch(googleSheetsEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({
+      action: 'delete',
+      id: customer.id,
+      customerNumber: customer.customerNumber,
+    }),
+  });
+  if (!response.ok) throw new Error('Google Sheets could not delete the record.');
+  const result = await response.json();
+  if (!result.ok) throw new Error(result.message || 'Google Sheets could not delete the record.');
+}
+
+function normaliseBirthday(value) {
+  if (!value) return '';
+  return String(value).slice(0, 10);
+}
+
+function normaliseCustomer(record) {
+  return {
+    id: String(record.id || record.customerNumber || crypto.randomUUID()),
+    customerNumber: String(record.customerNumber || ''),
+    name: String(record.name || ''),
+    age: Number(record.age || 0),
+    birthday: normaliseBirthday(record.birthday),
+    gender: String(record.gender || ''),
+    address: String(record.address || ''),
+    contactNumber: String(record.contactNumber || ''),
+    emergencyContactName: String(record.emergencyContactName || ''),
+    services: Array.isArray(record.services)
+      ? record.services.map(String)
+      : String(record.services || '').split(/\s*\|\s*|\s*,\s*/).filter(Boolean),
+  };
+}
+
+async function loadRecordsFromGoogleSheets(showStatus = true) {
+  if (entryOnlyMode) return;
+  if (showStatus) recordsMessage.textContent = 'Refreshing records from Google Sheets…';
+  refreshRecordsButton.disabled = true;
+  try {
+    const url = new URL(googleSheetsEndpoint);
+    url.searchParams.set('action', 'records');
+    url.searchParams.set('_', Date.now());
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Google Sheets could not load the records.');
+    const result = await response.json();
+    if (!result.ok || !Array.isArray(result.records)) {
+      throw new Error(result.message || 'Google Sheets could not load the records.');
+    }
+    customers = result.records.map(normaliseCustomer).filter((customer) => customer.name && customer.customerNumber);
+    selectedCustomerIds.clear();
+    saveCustomers();
+    renderCustomers();
+    updatePrintSelectedButton();
+    recordsMessage.textContent = `Loaded ${customers.length} record${customers.length === 1 ? '' : 's'} from Google Sheets.`;
+  } catch (error) {
+    recordsMessage.textContent = 'Could not load Google Sheets records. Showing records saved on this device.';
+  } finally {
+    refreshRecordsButton.disabled = false;
+  }
 }
 
 function removeLegacyHiddenData() {
@@ -351,12 +420,21 @@ function renderCustomers() {
     remove.className = 'delete-button';
     remove.type = 'button';
     remove.textContent = 'Remove';
-    remove.addEventListener('click', () => {
-      customers = customers.filter((item) => item.id !== customer.id);
-      selectedCustomerIds.delete(customer.id);
-      saveCustomers();
-      renderCustomers();
-      updatePrintSelectedButton();
+    remove.addEventListener('click', async () => {
+      if (!window.confirm(`Permanently delete ${customer.name} from the app and Google Sheets?`)) return;
+      remove.disabled = true;
+      try {
+        await deleteFromGoogleSheets(customer);
+        customers = customers.filter((item) => item.id !== customer.id);
+        selectedCustomerIds.delete(customer.id);
+        saveCustomers();
+        renderCustomers();
+        updatePrintSelectedButton();
+        recordsMessage.textContent = `${customer.name} was deleted from Google Sheets.`;
+      } catch (error) {
+        recordsMessage.textContent = error.message || 'The record could not be deleted.';
+        remove.disabled = false;
+      }
     });
 
     row.append(select, number, name, details, services, printServices, printVitals, printComplaint, printRemarks, remove);
@@ -376,7 +454,7 @@ form.addEventListener('submit', async (event) => {
     message.textContent = 'Please select no more than 3 services.';
     return;
   }
-  const customer = {
+  let customer = {
     id: crypto.randomUUID(),
     customerNumber: nextCustomerNumber(),
     name: values.get('name').trim(),
@@ -391,7 +469,7 @@ form.addEventListener('submit', async (event) => {
 
   let sentToGoogleSheets = true;
   try {
-    await saveToGoogleSheets(customer);
+    customer = await saveToGoogleSheets(customer);
   } catch (error) {
     sentToGoogleSheets = false;
   }
@@ -415,6 +493,7 @@ printButton.addEventListener('click', () => {
   window.print();
 });
 printSelectedButton.addEventListener('click', openPrintDetailsDialog);
+refreshRecordsButton.addEventListener('click', () => loadRecordsFromGoogleSheets());
 cancelPrintButton.addEventListener('click', () => printDialog.close());
 printDetailsForm.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -459,4 +538,6 @@ updateServiceSelectionLimit();
 
 if (entryOnlyMode) {
   document.querySelector('.directory-card').hidden = true;
+} else {
+  loadRecordsFromGoogleSheets(false);
 }
