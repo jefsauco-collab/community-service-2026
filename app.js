@@ -65,6 +65,8 @@ function formatBirthday(value) {
 
 function createDetail(label, value) {
   const detail = document.createElement('div');
+  detail.className = 'detail-item';
+  if (label === 'Address') detail.classList.add('detail-address');
   const detailLabel = document.createElement('strong');
   detailLabel.textContent = `${label}: `;
   detail.append(detailLabel, value);
@@ -86,10 +88,11 @@ function selectedCustomers() {
   return customers.filter((customer) => selectedCustomerIds.has(customer.id));
 }
 
-function setPrintVitals(container, bloodPressure = '', temperature = '') {
+function setPrintVitals(container, bloodPressure = '', temperature = '', weight = '') {
   container.replaceChildren(
     createPrintVital('Blood pressure', bloodPressure),
     createPrintVital('Temperature', temperature ? `${temperature} °C` : ''),
+    createPrintVital('Weight', weight ? `${weight} kg` : ''),
   );
 }
 
@@ -157,7 +160,6 @@ function openPrintDetailsDialog() {
     summary.append(
       createPrintSummaryItem('Age', `${customer.age} years`),
       createPrintSummaryItem('Birthday', formatBirthday(customer.birthday)),
-      createPrintSummaryItem('Gender', customer.gender || 'Not provided'),
       createPrintSummaryItem('Address', customer.address || 'Not provided'),
       createPrintSummaryItem('Contact number', customer.contactNumber || 'Not provided'),
       createPrintSummaryItem('Emergency Contact Name and Number', customer.emergencyContactName || 'Not provided'),
@@ -183,7 +185,16 @@ function openPrintDetailsDialog() {
     temperature.step = '0.1';
     temperatureLabel.append(temperature);
 
-    fieldGrid.append(bloodPressureLabel, temperatureLabel);
+    const weightLabel = document.createElement('label');
+    weightLabel.textContent = 'Weight (kg)';
+    const weight = document.createElement('input');
+    weight.type = 'number';
+    weight.name = `weight-${customer.id}`;
+    weight.min = '0';
+    weight.step = '0.1';
+    weightLabel.append(weight);
+
+    fieldGrid.append(bloodPressureLabel, temperatureLabel, weightLabel);
     const complaintLabel = document.createElement('label');
     complaintLabel.textContent = 'Chief Complaint';
     const complaint = document.createElement('textarea');
@@ -290,6 +301,7 @@ function renderCustomers() {
     number.textContent = customer.customerNumber;
 
     const name = document.createElement('div');
+    name.className = 'patient-identity';
     const nameText = document.createElement('div');
     nameText.className = 'customer-name';
     nameText.textContent = customer.name;
@@ -324,6 +336,7 @@ function renderCustomers() {
     printVitals.append(
       createPrintVital('Blood pressure'),
       createPrintVital('Temperature'),
+      createPrintVital('Weight'),
     );
 
     const printComplaint = document.createElement('div');
@@ -416,6 +429,7 @@ printDetailsForm.addEventListener('submit', (event) => {
       vitals,
       values.get(`bloodPressure-${customer.id}`),
       values.get(`temperature-${customer.id}`),
+      values.get(`weight-${customer.id}`),
     );
     setPrintComplaint(
       row.querySelector('.print-complaint'),

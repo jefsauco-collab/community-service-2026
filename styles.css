@@ -88,7 +88,7 @@ button:hover { background: #c96308; transform: translateY(-1px); }
 .print-summary-services > strong { width: 100%; }
 .print-service-option { align-items: center; display: inline-flex; gap: 4px; white-space: nowrap; }
 .print-service-option input { accent-color: #747b82; height: 13px; margin: 0; padding: 0; width: 13px; }
-.print-customer-field .field-grid { grid-template-columns: 1fr 1fr; }
+.print-customer-field .field-grid { grid-template-columns: repeat(3, 1fr); }
 .print-services { display: none; }
 .print-complaint { display: none; }
 .print-remarks { display: none; }
@@ -110,28 +110,30 @@ button:hover { background: #c96308; transform: translateY(-1px); }
 }
 
 @media print {
-  @page { size: A6 portrait; margin: 5mm; }
+  @page { size: A6 landscape; margin: 5mm; }
   body { background: #fff; }
   .app-shell { width: 100%; margin: 0; padding: 0; }
   .intro, .form-card, .directory-header, .print-button, .delete-button, .empty-state, .filter-field, .customer-select { display: none !important; }
   .directory-card { border: 0; border-radius: 0; box-shadow: none; margin: 0; padding: 0; }
-  .customer-row { grid-template-columns: 1fr 1fr; gap: 4px 8px; break-after: page; break-inside: avoid; page-break-after: always; padding: 0 0 5px; }
+  .customer-row { grid-template-columns: 1fr 1fr 1fr; gap: 7px 10px; break-after: page; break-inside: avoid; page-break-after: always; padding: 0 0 5px; }
   body.print-selected .customer-row:not(.is-selected) { display: none !important; }
   .customer-row:last-child { break-after: auto; page-break-after: auto; padding-bottom: 0; }
-  .customer-number { font-size: .68rem; }
-  .customer-name { font-size: .76rem; }
-  .customer-gender { font-size: .66rem; }
-  .customer-details { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; gap: 2px 7px; font-size: .64rem; }
+  .patient-identity { grid-column: 1 / 3; grid-row: 1; }
+  .customer-number { grid-column: 3; grid-row: 1; color: #245b91; font-size: 11px; text-align: right; }
+  .patient-identity .customer-name { font-size: 20px; line-height: 1.05; }
+  .customer-gender { display: block; font-size: 10px; margin-top: 3px; }
+  .customer-details { grid-column: 1 / -1; grid-template-columns: 1fr 1fr 1fr; gap: 5px 10px; font-size: 12px; }
+  .customer-details .detail-address { grid-column: 1 / -1; }
   .service-tags { display: none !important; }
-  .print-vitals { display: grid; grid-column: 1 / -1; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px dashed #a9bfd3; margin-top: 3px; padding-top: 5px; }
-  .print-services { display: grid; grid-column: 1 / -1; gap: 3px; margin-top: 2px; }
-  .print-services > strong { color: #244e76; font-size: .68rem; width: 100%; }
-  .print-service-option { font-size: .66rem; }
-  .print-vital { color: #244e76; font-size: .68rem; font-weight: 700; }
-  .print-vital-line { border-bottom: 1px solid #5f7487; display: inline-block; height: 1.1em; margin-left: 7px; min-width: 110px; vertical-align: bottom; }
-  .print-vital-value { color: #142840; font-size: .68rem; font-weight: 500; }
-  .print-complaint { display: grid; grid-column: 1 / -1; gap: 2px; color: #244e76; font-size: .68rem; font-weight: 700; }
-  .print-complaint-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 3.2em; white-space: pre-wrap; }
-  .print-remarks { display: grid; grid-column: 1 / -1; gap: 2px; color: #244e76; font-size: .68rem; font-weight: 700; }
-  .print-remarks-value { color: #142840; font-size: .66rem; font-weight: 500; min-height: 3.2em; white-space: pre-wrap; }
+  .print-services { display: grid; grid-column: 1 / -1; gap: 4px; margin-top: 2px; }
+  .print-services > strong { color: #244e76; font-size: 10px; width: 100%; }
+  .print-service-option { font-size: 10px; }
+  .print-vitals { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 1px dashed #a9bfd3; margin-top: 3px; padding-top: 5px; }
+  .print-vital { color: #244e76; font-size: 10px; font-weight: 700; }
+  .print-vital-line { border: 1px solid #5f7487; display: inline-block; height: 1.6em; margin: 3px 0 0; min-width: 100%; vertical-align: bottom; }
+  .print-vital-value { color: #142840; font-size: 10px; font-weight: 500; }
+  .print-complaint { display: grid; grid-column: 1 / 2; gap: 3px; color: #244e76; font-size: 10px; font-weight: 700; }
+  .print-complaint-value { border: 1px solid #a9bfd3; color: #142840; font-size: 10px; font-weight: 500; min-height: 70px; padding: 4px; white-space: pre-wrap; }
+  .print-remarks { display: grid; grid-column: 2 / -1; gap: 3px; color: #244e76; font-size: 10px; font-weight: 700; }
+  .print-remarks-value { border: 1px solid #a9bfd3; color: #142840; font-size: 10px; font-weight: 500; min-height: 70px; padding: 4px; white-space: pre-wrap; }
 }
