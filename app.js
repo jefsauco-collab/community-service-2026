@@ -14,6 +14,7 @@ const recordsMessage = document.querySelector('#records-message');
 const entrySubmissionConfirmation = document.querySelector('#entry-submission-confirmation');
 const submittedCustomerNumber = document.querySelector('#submitted-customer-number');
 const submittedCustomerName = document.querySelector('#submitted-customer-name');
+const backToPatientFormButton = document.querySelector('#back-to-patient-form');
 const printDialog = document.querySelector('#print-dialog');
 const printDetailsForm = document.querySelector('#print-details-form');
 const printCustomerFields = document.querySelector('#print-customer-fields');
@@ -71,6 +72,17 @@ function showEntrySubmissionConfirmation(customer) {
   submittedCustomerNumber.textContent = customer.customerNumber;
   submittedCustomerName.textContent = customer.name;
   entrySubmissionConfirmation.hidden = false;
+}
+
+function returnToPatientForm() {
+  entrySubmissionConfirmation.hidden = true;
+  document.querySelector('.intro').hidden = false;
+  document.querySelector('.form-card').hidden = false;
+  form.reset();
+  message.textContent = '';
+  submitCustomerButton.disabled = false;
+  updateServiceSelectionLimit();
+  document.querySelector('#name').focus();
 }
 
 function formatBirthday(value) {
@@ -550,6 +562,7 @@ printDetailsForm.addEventListener('submit', (event) => {
 });
 window.addEventListener('afterprint', () => document.body.classList.remove('print-selected'));
 customerFilter.addEventListener('input', renderCustomers);
+backToPatientFormButton.addEventListener('click', returnToPatientForm);
 function normaliseContactNumber() {
   contactNumberInput.value = contactNumberInput.value.replace(/\D/g, '');
 }
