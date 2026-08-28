@@ -458,6 +458,8 @@ function renderCustomers() {
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const values = new FormData(form);
+  const contactNumber = String(values.get('contactNumber') || '').replace(/\D/g, '');
+  contactNumberInput.value = contactNumber;
   const selectedServices = values.getAll('services');
   if (selectedServices.length === 0) {
     message.textContent = 'Please select at least one service.';
@@ -476,7 +478,7 @@ form.addEventListener('submit', async (event) => {
     birthday: values.get('birthday'),
     gender: values.get('gender'),
     address: values.get('address').trim(),
-    contactNumber: values.get('contactNumber').trim(),
+    contactNumber,
     emergencyContactName: values.get('emergencyContactName').trim(),
     services: selectedServices,
   };
@@ -503,8 +505,8 @@ form.addEventListener('submit', async (event) => {
       : `${customer.name} was submitted to Google Sheets. Use Refresh records to confirm it appears.`;
   } else {
     message.textContent = `${customer.name} was saved on this device, but could not be sent to Google Sheets.`;
+    submitCustomerButton.disabled = false;
   }
-  submitCustomerButton.disabled = false;
   document.querySelector('#name').focus();
 });
 
@@ -548,9 +550,13 @@ printDetailsForm.addEventListener('submit', (event) => {
 });
 window.addEventListener('afterprint', () => document.body.classList.remove('print-selected'));
 customerFilter.addEventListener('input', renderCustomers);
-contactNumberInput.addEventListener('input', () => {
+function normaliseContactNumber() {
   contactNumberInput.value = contactNumberInput.value.replace(/\D/g, '');
-});
+}
+
+contactNumberInput.addEventListener('input', normaliseContactNumber);
+contactNumberInput.addEventListener('change', normaliseContactNumber);
+contactNumberInput.addEventListener('blur', normaliseContactNumber);
 form.querySelectorAll('input[name="services"]').forEach((input) => {
   input.addEventListener('change', updateServiceSelectionLimit);
 });
