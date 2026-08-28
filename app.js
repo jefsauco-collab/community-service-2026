@@ -1,4 +1,6 @@
 const form = document.querySelector('#customer-form');
+const submitCustomerButton = form.querySelector('button[type="submit"]');
+const contactNumberInput = document.querySelector('#contact-number');
 const list = document.querySelector('#customer-list');
 const emptyState = document.querySelector('#empty-state');
 const count = document.querySelector('#customer-count');
@@ -465,6 +467,7 @@ form.addEventListener('submit', async (event) => {
     message.textContent = 'Please select no more than 3 services.';
     return;
   }
+  submitCustomerButton.disabled = true;
   let customer = {
     id: crypto.randomUUID(),
     customerNumber: nextCustomerNumber(),
@@ -501,6 +504,7 @@ form.addEventListener('submit', async (event) => {
   } else {
     message.textContent = `${customer.name} was saved on this device, but could not be sent to Google Sheets.`;
   }
+  submitCustomerButton.disabled = false;
   document.querySelector('#name').focus();
 });
 
@@ -544,6 +548,9 @@ printDetailsForm.addEventListener('submit', (event) => {
 });
 window.addEventListener('afterprint', () => document.body.classList.remove('print-selected'));
 customerFilter.addEventListener('input', renderCustomers);
+contactNumberInput.addEventListener('input', () => {
+  contactNumberInput.value = contactNumberInput.value.replace(/\D/g, '');
+});
 form.querySelectorAll('input[name="services"]').forEach((input) => {
   input.addEventListener('change', updateServiceSelectionLimit);
 });
