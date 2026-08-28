@@ -262,13 +262,17 @@ function saveCustomers() {
 }
 
 async function saveToGoogleSheets(customer) {
-  await fetch(googleSheetsEndpoint, {
+  const response = await fetch(googleSheetsEndpoint, {
     method: 'POST',
-    mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(customer),
   });
-  return customer;
+  if (!response.ok) throw new Error('Google Sheets could not save the record.');
+  const result = await response.json();
+  if (!result.ok || !result.record) {
+    throw new Error(result.message || 'Google Sheets could not save the record.');
+  }
+  return normaliseCustomer(result.record);
 }
 
 async function deleteFromGoogleSheets(customer) {
