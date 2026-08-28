@@ -479,9 +479,13 @@ form.addEventListener('submit', async (event) => {
   renderCustomers();
   form.reset();
   updateServiceSelectionLimit();
-  message.textContent = sentToGoogleSheets
-    ? `${customer.name} was submitted to Google Sheets. Use Refresh records to confirm it appears.`
-    : `${customer.name} was saved on this device, but could not be sent to Google Sheets.`;
+  if (sentToGoogleSheets) {
+    message.textContent = entryOnlyMode
+      ? `${customer.customerNumber} - ${customer.name} has been submitted.`
+      : `${customer.name} was submitted to Google Sheets. Use Refresh records to confirm it appears.`;
+  } else {
+    message.textContent = `${customer.name} was saved on this device, but could not be sent to Google Sheets.`;
+  }
   document.querySelector('#name').focus();
 });
 
