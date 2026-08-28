@@ -62,7 +62,9 @@ function updatePrintSelectedButton() {
 
 function formatBirthday(value) {
   if (!value) return 'Not provided';
-  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(`${value}T00:00:00`));
+  const birthday = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(birthday.getTime())) return String(value);
+  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(birthday);
 }
 
 function createDetail(label, value) {
@@ -530,12 +532,12 @@ form.querySelectorAll('input[name="services"]').forEach((input) => {
 removeLegacyHiddenData();
 updateSavedServiceNames();
 assignMissingCustomerNumbers();
-renderCustomers();
-updatePrintSelectedButton();
 updateServiceSelectionLimit();
 
 if (entryOnlyMode) {
   document.querySelector('.directory-card').hidden = true;
 } else {
+  renderCustomers();
+  updatePrintSelectedButton();
   loadRecordsFromGoogleSheets(false);
 }
