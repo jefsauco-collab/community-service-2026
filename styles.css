@@ -92,6 +92,10 @@ button:hover { background: #c96308; transform: translateY(-1px); }
 .print-services { display: none; }
 .print-complaint { display: none; }
 .print-remarks { display: none; }
+.entry-submission-confirmation { margin: 0 auto; max-width: 520px; text-align: center; }
+.entry-submission-confirmation p { color: #55738f; font-size: .82rem; font-weight: 700; letter-spacing: .08em; margin: 0 0 5px; text-transform: uppercase; }
+.entry-submission-confirmation strong { color: #1e5f97; display: block; font-size: 1.4rem; margin-bottom: 30px; }
+.entry-submission-confirmation h2 { color: #142840; font-size: 1.7rem; margin: 0; }
 .dialog-actions { display: flex; justify-content: end; gap: 10px; }
 .cancel-button { background: #eaf3fb; color: #23629d; }
 .cancel-button:hover { background: #d7e9f8; }

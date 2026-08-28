@@ -9,6 +9,9 @@ const refreshRecordsButton = document.querySelector('#refresh-records');
 const customerFilter = document.querySelector('#customer-filter');
 const serviceHint = document.querySelector('#service-hint');
 const recordsMessage = document.querySelector('#records-message');
+const entrySubmissionConfirmation = document.querySelector('#entry-submission-confirmation');
+const submittedCustomerNumber = document.querySelector('#submitted-customer-number');
+const submittedCustomerName = document.querySelector('#submitted-customer-name');
 const printDialog = document.querySelector('#print-dialog');
 const printDetailsForm = document.querySelector('#print-details-form');
 const printCustomerFields = document.querySelector('#print-customer-fields');
@@ -58,6 +61,14 @@ function updatePrintSelectedButton() {
   const selectedCount = selectedCustomerIds.size;
   printSelectedButton.disabled = selectedCount === 0;
   printSelectedButton.textContent = `Print selected (${selectedCount})`;
+}
+
+function showEntrySubmissionConfirmation(customer) {
+  document.querySelector('.intro').hidden = true;
+  document.querySelector('.form-card').hidden = true;
+  submittedCustomerNumber.textContent = customer.customerNumber;
+  submittedCustomerName.textContent = customer.name;
+  entrySubmissionConfirmation.hidden = false;
 }
 
 function formatBirthday(value) {
@@ -476,9 +487,13 @@ form.addEventListener('submit', async (event) => {
 
   customers.unshift(customer);
   saveCustomers();
-  renderCustomers();
+  if (!entryOnlyMode) renderCustomers();
   form.reset();
   updateServiceSelectionLimit();
+  if (entryOnlyMode && sentToGoogleSheets) {
+    showEntrySubmissionConfirmation(customer);
+    return;
+  }
   if (sentToGoogleSheets) {
     message.textContent = entryOnlyMode
       ? `${customer.customerNumber} - ${customer.name} has been submitted.`
