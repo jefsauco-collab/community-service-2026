@@ -14,7 +14,7 @@ const printDetailsForm = document.querySelector('#print-details-form');
 const printCustomerFields = document.querySelector('#print-customer-fields');
 const cancelPrintButton = document.querySelector('#cancel-print');
 const storageKey = 'customer-directory-records';
-const googleSheetsEndpoint = 'https://script.google.com/macros/s/AKfycbydFvEPV0H9nxHktJt8r01xYfzwzACRgmVzNB_wXJK_GXtptDJ9BMxbu7F-DC5a0lwonA/exec';
+const googleSheetsEndpoint = 'https://script.google.com/macros/s/AKfycbyCojXcgAEqSa5zf70dh-NOuYYgtCyDAhvIYpHdlYttpjw7cGt_2NQ_yEwzf5xt4dp9/exec';
 const entryOnlyMode = new URLSearchParams(window.location.search).get('mode') === 'entry';
 const serviceNameUpdates = {
   Medical: 'Medical Check-up',
