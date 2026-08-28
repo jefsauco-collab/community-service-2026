@@ -235,15 +235,13 @@ function saveCustomers() {
 }
 
 async function saveToGoogleSheets(customer) {
-  const response = await fetch(googleSheetsEndpoint, {
+  await fetch(googleSheetsEndpoint, {
     method: 'POST',
+    mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(customer),
   });
-  if (!response.ok) throw new Error('Google Sheets could not save the record.');
-  const result = await response.json();
-  if (!result.ok || !result.record) throw new Error(result.message || 'Google Sheets could not save the record.');
-  return normaliseCustomer(result.record);
+  return customer;
 }
 
 async function deleteFromGoogleSheets(customer) {
@@ -480,7 +478,7 @@ form.addEventListener('submit', async (event) => {
   form.reset();
   updateServiceSelectionLimit();
   message.textContent = sentToGoogleSheets
-    ? `${customer.name} was added and sent to Google Sheets.`
+    ? `${customer.name} was submitted to Google Sheets. Use Refresh records to confirm it appears.`
     : `${customer.name} was saved on this device, but could not be sent to Google Sheets.`;
   document.querySelector('#name').focus();
 });
